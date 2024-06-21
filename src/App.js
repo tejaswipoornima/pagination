@@ -21,6 +21,7 @@ const App = () => {
       .catch((error) => {
         console.error('Error fetching data:', error);
         setError('failed to fetch data');
+        alert('failed to fetch data'); // Show alert message on error
       });
   }, []);
 
@@ -39,7 +40,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>Employee Data Table</h1>
+      <h1>Employee Data</h1>
       {error && <p>{error}</p>}
       <Table data={currentEmployees} />
       <Pagination
