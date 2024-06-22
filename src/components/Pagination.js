@@ -6,7 +6,7 @@ const Pagination = ({ currentPage, totalPages, onPrevious, onNext }) => {
       <button onClick={onPrevious} disabled={currentPage === 1}>
         Previous
       </button>
-      <p> Page {currentPage } of {totalPages} </p>
+      <span> Page {currentPage } of {totalPages} </span>
       <button onClick={onNext} disabled={currentPage === totalPages}>
         Next
       </button>
