@@ -1,6 +1,10 @@
 import React from 'react';
 
-const Table = ({ data }) => {
+const Table = ({ data, loading }) => {
+  if (loading) {
+    return <h2>Loading...</h2>;
+  }
+
   return (
     <table>
       <thead>
@@ -11,7 +15,7 @@ const Table = ({ data }) => {
         </tr>
       </thead>
       <tbody>
-        {data.map((employee) => (
+        {data?.map((employee) => (
           <tr key={employee.id}>
             <td>{employee.name}</td>
             <td>{employee.email}</td>

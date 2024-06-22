@@ -6,10 +6,12 @@ import './App.css';
 const App = () => {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const pageSize = 10;
 
   useEffect(() => {
+    setLoading(true);
     fetch('https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json')
       .then((response) => {
         if (!response.ok) {
@@ -17,22 +19,30 @@ const App = () => {
         }
         return response.json();
       })
-      .then((data) => setEmployees(data))
+      .then((data) => {
+        setEmployees(data);
+        setLoading(false);
+      })
       .catch((error) => {
         console.error('Error fetching data:', error);
         setError('failed to fetch data');
         alert('failed to fetch data'); // Show alert message on error
+        setLoading(false);
       });
   }, []);
 
   const totalPages = Math.ceil(employees.length / pageSize);
 
   const handlePrevious = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
   };
 
   const handleNext = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
   };
 
   const startIndex = (currentPage - 1) * pageSize;
@@ -42,7 +52,7 @@ const App = () => {
     <div className="App">
       <h1>Employee Data</h1>
       {error && <p>{error}</p>}
-      <Table data={currentEmployees} />
+      <Table data={currentEmployees} loading={loading} />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
