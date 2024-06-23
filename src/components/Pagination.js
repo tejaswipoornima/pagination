@@ -2,12 +2,12 @@ import React from 'react';
 
 const Pagination = ({ currentPage, totalPages, onPrevious, onNext }) => {
   return (
-    <div>
-      <button onClick={onPrevious} >
+    <div className='buttons'>
+      <button type="button" onClick={onPrevious} >
         Previous
       </button>
       <div> {currentPage } </div>
-      <button onClick={onNext} >
+      <button type='button' onClick={onNext} >
         Next
       </button>
     </div>

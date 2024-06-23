@@ -34,15 +34,15 @@ const App = () => {
   const totalPages = Math.ceil(employees.length / pageSize);
 
   const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
+    if (currentPage === 1) 
+      return;
+    setCurrentPage((prevPage) => prevPage - 1);
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
+    if (currentPage === totalPages) 
+      return;
+    setCurrentPage((prevPage) => prevPage + 1);
   };
 
   const startIndex = (currentPage - 1) * pageSize;
