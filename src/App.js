@@ -1,64 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import Table from './components/Table';
-import Pagination from './components/Pagination';
 import './App.css';
 
 const App = () => {
   const [employees, setEmployees] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const pageSize = 10;
+  const [itemsPerPage] = useState(10);
 
   useEffect(() => {
-    setLoading(true);
-    fetch('https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json')
-      .then((response) => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await fetch('https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json');
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('failed to fetch data');
         }
-        return response.json();
-      })
-      .then((data) => {
+        const data = await response.json();
         setEmployees(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-        setError('failed to fetch data');
-        alert('failed to fetch data'); // Show alert message on error
-        setLoading(false);
-      });
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+    fetchEmployees();
   }, []);
 
-  const totalPages = Math.ceil(employees.length / pageSize);
+  const indexOfLastEmployee = currentPage * itemsPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - itemsPerPage;
+  const currentEmployees = employees.slice(indexOfFirstEmployee, indexOfLastEmployee);
 
-  const handlePrevious = () => {
-    if (currentPage === 1) 
-      return;
-    setCurrentPage((prevPage) => prevPage - 1);
+  const totalPages = Math.ceil(employees.length / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
   };
 
-  const handleNext = () => {
-    if (currentPage === totalPages) 
-      return;
-    setCurrentPage((prevPage) => prevPage + 1);
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
-
-  const startIndex = (currentPage - 1) * pageSize;
-  const currentEmployees = employees.slice(startIndex, startIndex + pageSize);
 
   return (
     <div className="App">
-      <h1>Employee Data</h1>
-      {error && <p>{error}</p>}
-      <Table data={currentEmployees} loading={loading} />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-      />
+      <h1>Employee Data Table</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentEmployees.map((employee) => (
+            <tr key={employee.id}>
+              <td>{employee.id}</td>
+              <td>{employee.name}</td>
+              <td>{employee.email}</td>
+              <td>{employee.role}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="pagination">
+        <button onClick={handlePreviousPage} >
+          Previous
+        </button>
+        <span className='page-number'>{currentPage}</span>
+        <button onClick={handleNextPage} >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
