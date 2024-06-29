@@ -43,6 +43,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>Employee Data Table</h1>
+      <div>
       <table>
         <thead>
           <tr>
@@ -62,7 +63,8 @@ const App = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>  
+      </div>
       <div className="pagination">
         <button onClick={handlePreviousPage} >
           Previous
