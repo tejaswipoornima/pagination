@@ -67,7 +67,7 @@ const App = () => {
         <button onClick={handlePreviousPage} >
           Previous
         </button>
-        <span className='page-number'>{currentPage}</span>
+        <div>{currentPage}</div>
         <button onClick={handleNextPage} >
           Next
         </button>
